@@ -7,7 +7,8 @@
     "start:dev": "vite --port 8000",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky install .husky"
   },
   "dependencies": {
     "@babel/preset-react": "^7.22.15",
