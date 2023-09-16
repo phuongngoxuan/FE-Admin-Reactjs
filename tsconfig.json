@@ -18,7 +18,14 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "strictNullChecks": true, // Bật kiểm tra kiểu null và undefined
+    "noImplicitAny": true, // Bật kiểm tra kiểu any ẩn
+    "strictFunctionTypes": true, // Bật kiểm tra kiểu cho các hàm
+    "strictPropertyInitialization": true, // Bật kiểm tra khởi tạo thuộc tính
+    "noImplicitThis": true, // Bật kiểm tra this ẩn
+    "alwaysStrict": true, // Sử dụng "use strict" trong tất cả các tệp
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
