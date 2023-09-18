@@ -1,8 +1,8 @@
 import './home.scss';
+import { Link } from 'react-router-dom';
 
 function Home() {
-    console.log('in');
-    return <div className="home">Home</div>;
+    return <div className="home">home</div>;
 }
 
 Home.propTypes = {};

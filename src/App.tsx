@@ -1,5 +1,5 @@
 import Home from './pages/home/Home';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Users from './pages/users/Users';
 import Products from './pages/products/Products';
 import Orders from './pages/orders/Orders';
@@ -7,6 +7,7 @@ import Warehouse from './pages/warehouse/Warehouse';
 import Navbar from './components/navbar/Navbar';
 import Footer from './components/footer/Footer';
 import Menu from './components/menu/Menu';
+import './styles/global.scss';
 
 const Layout = () => {
     return (
@@ -16,9 +17,10 @@ const Layout = () => {
                 <div className="menuContainer">
                     <Menu />
                 </div>
-                <div className="contentContainer">{/* <Outlet/> */}</div>
+                <div className="contentContainer">
+                    <Outlet />
+                </div>
             </div>
-
             <Footer />
         </div>
     );
@@ -31,7 +33,15 @@ function App() {
             element: <Layout />,
             children: [
                 {
-                    path: '/',
+                    path: '',
+                    element: <Home />,
+                },
+                {
+                    path: 'home',
+                    element: <Home />,
+                },
+                {
+                    path: 'profile',
                     element: <Home />,
                 },
                 {
@@ -39,18 +49,26 @@ function App() {
                     element: <Users />,
                 },
                 {
+                    path: 'orders',
+                    element: <Orders />,
+                },
+                {
                     path: 'products',
                     element: <Products />,
                 },
                 {
-                    path: 'orders',
-                    element: <Orders />,
+                    path: 'posts',
+                    element: <Products />,
                 },
                 {
                     path: 'warehouse',
                     element: <Warehouse />,
                 },
             ],
+        },
+        {
+            path: 'login',
+            element: <div> Login</div>,
         },
     ]);
 
