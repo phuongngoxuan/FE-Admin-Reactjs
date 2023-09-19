@@ -1,6 +1,5 @@
 import './pieChartBox.scss';
-import React, { PureComponent } from 'react';
-import { PieChart, Pie, Cell, Repo, ResponsiveContainer, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
 const data = [
     { name: 'Mobile', value: 400, color: '#0088FE' },
@@ -9,33 +8,36 @@ const data = [
     { name: 'Tablet', value: 200, color: '#FF8042' },
 ];
 
-const PieChartBox = (props) => {
+const PieChartBox = () => {
     return (
         <div className="pieChartBox">
             <h1>Lead by source</h1>
             <div className="chart">
-                <ResponsiveContainer width="99%" height={300}>
-                <PieChart>
-                    <Tooltip
-                        labelStyle={{ display: 'none' }}
-                        contentStyle={{ background: 'white', borderRadius: '5px' }}
-                    />
-                    <Pie
-                        data={data}
-                        cx={120}
-                        cy={200}
-                        innerRadius={60}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        paddingAngle={5}
-                        dataKey="value"
-                    >
-                        {data.map((item) => (
-                            <Cell key={item.name} fill={item.color} />
-                        ))}
-                    </Pie>
-                </PieChart>
-                <ResponsiveContainer/>
+                <ResponsiveContainer width="90%" height={300}>
+                    <PieChart>
+                        <Tooltip
+                            labelStyle={{ display: 'none' }}
+                            contentStyle={{ background: 'white', borderRadius: '5px' }}
+                            cursor={{ fill: 'none' }}
+                        />
+                        <Pie data={data} innerRadius={'70%'} outerRadius={'90%'} paddingAngle={5} Key="value">
+                            {data.map((item) => (
+                                <Cell key={item.name} fill={item.color} />
+                            ))}
+                        </Pie>
+                    </PieChart>
+                </ResponsiveContainer>
+            </div>
+            <div className="options">
+                {data.map((item) => (
+                    <div className="option" key={item.name}>
+                        <div className="title">
+                            <div className="dot" style={{ backgroundColor: item.color }} />
+                            <span> {item.name}</span>
+                        </div>
+                        <span className="value">{item.value}</span>
+                    </div>
+                ))}
             </div>
         </div>
     );

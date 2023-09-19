@@ -1,7 +1,6 @@
-import DataTable from '../../components/dataTable/DataTable';
+import DataTable from '../dataTable/DataTable';
 import './users.scss';
-
-function Users() {
+const User = () => {
     return (
         <div className="users">
             <div className="info">
@@ -11,8 +10,8 @@ function Users() {
             <DataTable />
         </div>
     );
-}
+};
 
-Users.propTypes = {};
+User.propTypes = {};
 
-export default Users;
+export default User;

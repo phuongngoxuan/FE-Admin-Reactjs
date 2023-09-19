@@ -1,0 +1,21 @@
+.users{
+    padding: 20px;
+    .info{
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      
+
+        h1{
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        button{
+         border-radius: 20px;
+         padding: 12px 20px;
+         border: none;
+         cursor: pointer;
+        }
+    }
+}
