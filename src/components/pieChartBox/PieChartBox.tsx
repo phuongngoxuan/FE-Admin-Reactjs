@@ -20,7 +20,7 @@ const PieChartBox = () => {
                             contentStyle={{ background: 'white', borderRadius: '5px' }}
                             cursor={{ fill: 'none' }}
                         />
-                        <Pie data={data} innerRadius={'70%'} outerRadius={'90%'} paddingAngle={5} Key="value">
+                        <Pie data={data} innerRadius={'70%'} outerRadius={'90%'} paddingAngle={5} dataKey="value">
                             {data.map((item) => (
                                 <Cell key={item.name} fill={item.color} />
                             ))}

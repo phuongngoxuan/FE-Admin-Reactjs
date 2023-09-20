@@ -1,12 +1,12 @@
 import { GridColDef } from '@mui/x-data-grid';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DataTable from '../../components/dataTable/DataTable';
-import { userRows } from '../../data';
 import './users.scss';
 import Add from '../../components/add/Add';
+import { QueryClient, useQuery } from '@tanstack/react-query';
 
 const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 90 },
+    { field: '_id', headerName: 'ID', width: 90 },
     {
         field: 'img',
         headerName: 'Avatar',
@@ -54,16 +54,44 @@ const columns: GridColDef[] = [
 ];
 
 function Users() {
+    const queryClient = new QueryClient();
+
     const [open, setOpen] = useState(false);
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(6);
+    const [totalPages, setTotalPages] = useState(0);
+
+    useEffect(() => {
+        queryClient.invalidateQueries('allusers');
+    }, [page, limit]);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { isLoading, isError, data, error } = useQuery(['allusers', page, limit], () =>
+        fetch(`http://localhost:3343/api/v1/users?page=${page}&limit=${limit}`).then((res) => res.json()),
+    );
+
+    const rowData = data?.data?.result;
+
     return (
         <div className="users">
             <div className="info">
                 <h1>Users</h1>
                 <button onClick={() => setOpen(true)}>Add New User</button>
             </div>
-            <DataTable slug="users" columns={columns} rows={userRows} />
 
-            <div>{open && <Add slug="user" columns={columns} setOpen={setOpen} />}</div>
+            {isLoading ? (
+                'Loading...'
+            ) : (
+                <DataTable
+                    slug="users"
+                    columns={columns}
+                    rows={rowData?.map((item: any) => {
+                        return { ...item, id: item?._id };
+                    })}
+                />
+            )}
+
+            <div>{open && <Add slug="users" columns={columns} setOpen={setOpen} />}</div>
         </div>
     );
 }
