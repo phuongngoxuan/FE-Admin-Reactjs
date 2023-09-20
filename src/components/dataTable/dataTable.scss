@@ -1,19 +1,32 @@
-.dataTable{
+.dataTable {
     padding: 20px;
-    .dataGrid{
+
+    .dataGrid {
         padding: 20px;
         background-color: white;
-        .MuiDataGrid-toolbarContainer{
+
+        .MuiDataGrid-toolbarContainer {
             flex-direction: row-reverse;
         }
 
-
-        img{
+        img {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             object-fit: cover;
         }
-      
+
+        .action {
+
+            display: flex;
+            gap: 15px;
+
+            img {
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+            }
+        }
+
     }
 }
