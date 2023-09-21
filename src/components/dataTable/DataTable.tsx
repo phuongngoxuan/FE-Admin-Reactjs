@@ -3,23 +3,24 @@ import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
 
 interface Props {
     columns: GridColDef[];
     rows: object[];
     slug: string;
+    page: number;
+    limit: number;
+    setPage: React.Dispatch<React.SetStateAction<number>>;
+    setLimit: React.Dispatch<React.SetStateAction<number>>;
+    total: number;
 }
 
 const DataTable = (props: Props) => {
     const queryClient = useQueryClient();
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(5);
-    const [totalPages, setTotalPages] = useState(0);
 
     const mutation = useMutation({
         mutationFn: (id: string) => {
-            return fetch(`http://localhost:3343/api/v1/${props.slug}/${id}`, { method: 'delete' });
+            return fetch(`${import.meta.env.VITE_BASE_URL}/${props.slug}/${id}`, { method: 'delete' });
         },
         onSuccess: () => {
             queryClient.invalidateQueries([`all${props.slug}`]);
@@ -61,8 +62,7 @@ const DataTable = (props: Props) => {
                     initialState={{
                         pagination: {
                             paginationModel: {
-                                pageSize: 5,
-                                page: 10,
+                                pageSize: 1,
                             },
                         },
                     }}
@@ -73,12 +73,20 @@ const DataTable = (props: Props) => {
                             quickFilterProps: { debounceMs: 500 },
                         },
                     }}
-                    pageSizeOptions={[20]}
+                    pageSizeOptions={[5, 10, 25]}
                     checkboxSelection
                     disableRowSelectionOnClick
                     disableColumnFilter
                     disableDensitySelector
                     disableColumnSelector
+                    pagination
+                    rowCount={props.total}
+                    paginationMode="server"
+                    paginationModel={{ pageSize: props.limit, page: props.page }}
+                    onPaginationModelChange={(e) => {
+                        props.setLimit(e.pageSize);
+                        props.setPage(e.page);
+                    }}
                 />
             </Box>
         </div>

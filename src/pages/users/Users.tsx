@@ -1,9 +1,9 @@
 import { GridColDef } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import DataTable from '../../components/dataTable/DataTable';
 import './users.scss';
 import Add from '../../components/add/Add';
-import { QueryClient, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 const columns: GridColDef[] = [
     { field: '_id', headerName: 'ID', width: 90 },
@@ -53,21 +53,20 @@ const columns: GridColDef[] = [
     },
 ];
 
-function Users() {
-    const queryClient = new QueryClient();
-
+function Users(): ReactElement<any, any> {
     const [open, setOpen] = useState(false);
-    const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(6);
-    const [totalPages, setTotalPages] = useState(0);
-
-    useEffect(() => {
-        queryClient.invalidateQueries('allusers');
-    }, [page, limit]);
+    const [page, setPage] = useState(0);
+    const [limit, setLimit] = useState(10);
+    const [total, setTotal] = useState(0);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { isLoading, isError, data, error } = useQuery(['allusers', page, limit], () =>
-        fetch(`http://localhost:3343/api/v1/users?page=${page}&limit=${limit}`).then((res) => res.json()),
+        fetch(`${import.meta.env.VITE_BASE_URL}/users?page=${page + 1}&limit=${limit}`)
+            .then((res) => res.json())
+            .then((data) => {
+                setTotal(data?.data?.total);
+                return data;
+            }),
     );
 
     const rowData = data?.data?.result;
@@ -83,11 +82,18 @@ function Users() {
                 'Loading...'
             ) : (
                 <DataTable
+                    page={page}
+                    limit={limit}
+                    setPage={setPage}
+                    setLimit={setLimit}
+                    total={total}
                     slug="users"
                     columns={columns}
-                    rows={rowData?.map((item: any) => {
-                        return { ...item, id: item?._id };
-                    })}
+                    rows={
+                        rowData?.map((item: any) => {
+                            return { ...item, id: item?._id };
+                        }) || []
+                    }
                 />
             )}
 
