@@ -9,6 +9,8 @@ import Footer from './components/footer/Footer';
 import Menu from './components/menu/Menu';
 import './styles/global.scss';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Product from './pages/product/Product';
+import User from './pages/user/User';
 
 const queryClient = new QueryClient();
 
@@ -52,6 +54,14 @@ function App() {
                 {
                     path: 'users',
                     element: <Users />,
+                },
+                {
+                    path: '/users/:id',
+                    element: <User />,
+                },
+                {
+                    path: '/products/:id',
+                    element: <Product />,
                 },
                 {
                     path: 'orders',

@@ -82,11 +82,6 @@ function Users(): ReactElement<any, any> {
                 'Loading...'
             ) : (
                 <DataTable
-                    page={page}
-                    limit={limit}
-                    setPage={setPage}
-                    setLimit={setLimit}
-                    total={total}
                     slug="users"
                     columns={columns}
                     rows={
@@ -94,6 +89,11 @@ function Users(): ReactElement<any, any> {
                             return { ...item, id: item?._id };
                         }) || []
                     }
+                    page={page}
+                    limit={limit}
+                    setPage={setPage}
+                    setLimit={setLimit}
+                    total={total}
                 />
             )}
 
