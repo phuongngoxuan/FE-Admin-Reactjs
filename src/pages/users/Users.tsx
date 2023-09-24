@@ -60,7 +60,7 @@ function Users(): ReactElement<any, any> {
     const [total, setTotal] = useState(0);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { isLoading, isError, data, error } = useQuery(['allusers', page, limit], () =>
+    const { isLoading, data } = useQuery(['allusers', page, limit], () =>
         fetch(`${import.meta.env.VITE_BASE_URL}/users?page=${page + 1}&limit=${limit}`)
             .then((res) => res.json())
             .then((data) => {
@@ -69,7 +69,11 @@ function Users(): ReactElement<any, any> {
             }),
     );
 
-    const rowData = data?.data?.result;
+    // add field id in table
+    const rowData =
+        data?.data?.result?.map((item: any) => {
+            return { ...item, id: item?._id };
+        }) || [];
 
     return (
         <div className="users">
@@ -84,11 +88,7 @@ function Users(): ReactElement<any, any> {
                 <DataTable
                     slug="users"
                     columns={columns}
-                    rows={
-                        rowData?.map((item: any) => {
-                            return { ...item, id: item?._id };
-                        }) || []
-                    }
+                    rows={rowData}
                     page={page}
                     limit={limit}
                     setPage={setPage}

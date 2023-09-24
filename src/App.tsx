@@ -1,16 +1,20 @@
-import Home from './pages/home/Home';
+import React, { lazy } from 'react';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
-import Users from './pages/users/Users';
-import Products from './pages/products/Products';
-import Orders from './pages/orders/Orders';
-import Warehouse from './pages/warehouse/Warehouse';
-import Navbar from './components/navbar/Navbar';
-import Footer from './components/footer/Footer';
-import Menu from './components/menu/Menu';
 import './styles/global.scss';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import Product from './pages/product/Product';
-import User from './pages/user/User';
+import { userInputs } from './data';
+
+const Home = lazy(() => import('./pages/home/Home'));
+const Users = lazy(() => import('./pages/users/Users'));
+const Products = lazy(() => import('./pages/products/Products'));
+const Orders = lazy(() => import('./pages/orders/Orders'));
+const Warehouse = lazy(() => import('./pages/warehouse/Warehouse'));
+const Navbar = lazy(() => import('./components/navbar/Navbar'));
+const Footer = lazy(() => import('./components/footer/Footer'));
+const Product = lazy(() => import('./pages/product/Product'));
+const User = lazy(() => import('./pages/user/User'));
+const New = lazy(() => import('./pages/new/New'));
+const Menu = lazy(() => import('./components/menu/Menu'));
 
 const queryClient = new QueryClient();
 
@@ -56,11 +60,11 @@ function App() {
                     element: <Users />,
                 },
                 {
-                    path: '/users/:id',
+                    path: 'users/:id',
                     element: <User />,
                 },
                 {
-                    path: '/products/:id',
+                    path: 'products/:id',
                     element: <Product />,
                 },
                 {
@@ -79,6 +83,10 @@ function App() {
                     path: 'warehouse',
                     element: <Warehouse />,
                 },
+                {
+                    path: `users/new`,
+                    element: <New inputs={userInputs} title="user" />,
+                },
             ],
         },
         {
@@ -87,7 +95,11 @@ function App() {
         },
     ]);
 
-    return <RouterProvider router={router} />;
+    return (
+        <React.Suspense fallback={<div>Loading...</div>}>
+            <RouterProvider router={router} />
+        </React.Suspense>
+    );
 }
 
 export default App;

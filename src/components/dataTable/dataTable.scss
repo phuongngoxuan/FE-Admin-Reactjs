@@ -1,13 +1,40 @@
 .dataTable {
     padding: 20px;
 
+    .gridToolbar {
+        height: 50px;
+        display: flex;
+        justify-content: space-between;
+
+        .left {
+            flex: left;
+            .btnDeleteSelected {
+                color: rgb(242, 33, 33);
+                background-color: #f6efef;
+
+                &:hover {
+                    background-color: rgb(219, 209, 209);
+                    color: rgb(252, 5, 5);
+                }
+            }
+        }
+
+        .right {
+            display: flex;
+            flex: right;
+            .quickFilter {
+                padding-right: 20px;
+            }
+        }
+    }
+
     .dataGrid {
         padding: 20px;
         background-color: white;
 
-        .MuiDataGrid-toolbarContainer {
-            flex-direction: row-reverse;
-        }
+        // .MuiDataGrid-toolbarContainer {
+        //     flex-direction: row-reverse;
+        // }
 
         img {
             width: 40px;
@@ -17,7 +44,6 @@
         }
 
         .action {
-
             display: flex;
             gap: 15px;
 
@@ -27,6 +53,5 @@
                 cursor: pointer;
             }
         }
-
     }
 }

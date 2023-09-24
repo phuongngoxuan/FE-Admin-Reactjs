@@ -4,7 +4,7 @@ const Navbar = () => {
     return (
         <div className="navbar">
             <div className="logo">
-                <img src="logo.svg" alt="" />
+                <img src="../logo.svg" alt="" />
                 <span>Admin Demo App</span>
             </div>
             <div className="icon">

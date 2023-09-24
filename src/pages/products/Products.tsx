@@ -53,17 +53,6 @@ const columns: GridColDef[] = [
     },
 ];
 
-// interface Props {
-//     columns: GridColDef[];
-//     rows: object[];
-//     slug: string;
-//     page: number;
-//     limit: number;
-//     setPage: React.Dispatch<React.SetStateAction<number>>;
-//     setLimit: React.Dispatch<React.SetStateAction<number>>;
-//     total: number;
-// }
-
 const Products = () => {
     const [open, setOpen] = useState(false);
     const [page, setPage] = useState(0);
@@ -71,7 +60,7 @@ const Products = () => {
     const [total, setTotal] = useState(0);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { isLoading, isError, data, error } = useQuery(['allproducts'], () =>
+    const { isLoading, data } = useQuery(['allproducts'], () =>
         fetch(`${import.meta.env.VITE_BASE_URL}/products?page=${page + 1}&limit=${limit}`)
             .then((res) => res.json())
             .then((data) => {
@@ -80,7 +69,10 @@ const Products = () => {
             }),
     );
 
-    const rowData = data?.data?.result;
+    const rowData =
+        data?.data?.result?.map((item: any) => {
+            return { ...item, id: item?._id };
+        }) || [];
 
     return (
         <div className="products">
@@ -88,20 +80,20 @@ const Products = () => {
                 <h1>Product</h1>
                 <button onClick={() => setOpen(true)}>Add New Product</button>
             </div>
-            <DataTable
-                slug="products"
-                columns={columns}
-                rows={
-                    rowData?.map((item: any) => {
-                        return { ...item, id: item?._id };
-                    }) || []
-                }
-                page={page}
-                limit={limit}
-                setPage={setPage}
-                setLimit={setLimit}
-                total={total}
-            />
+            {isLoading ? (
+                'Loading...'
+            ) : (
+                <DataTable
+                    slug="products"
+                    columns={columns}
+                    rows={rowData}
+                    page={page}
+                    limit={limit}
+                    setPage={setPage}
+                    setLimit={setLimit}
+                    total={total}
+                />
+            )}
             <div>{open && <Add slug="product" columns={columns} setOpen={setOpen} />}</div>
         </div>
     );

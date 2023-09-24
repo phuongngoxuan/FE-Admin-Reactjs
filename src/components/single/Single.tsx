@@ -37,7 +37,7 @@ const Single = (props: Props) => {
                     <div className="chart">
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart
-                                key={1}
+                                key={props.id}
                                 width={500}
                                 height={300}
                                 data={props.chart.data}
