@@ -11,52 +11,20 @@ import {
     // GridToolbarFilterButton,
     // GridToolbarDensitySelector,
 } from '@mui/x-data-grid';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import { PropsDataTable } from '../../shares/interface/dataTable.interface';
+import { mutationDelete, mutationDeletes } from '../../shares/api/dataTable.api';
 
-interface Props {
-    columns: GridColDef[];
-    rows: object[];
-    slug: string;
-    page: number;
-    limit: number;
-    setPage: React.Dispatch<React.SetStateAction<number>>;
-    setLimit: React.Dispatch<React.SetStateAction<number>>;
-    total: number;
-}
-
-const DataTable = (props: Props) => {
-    const queryClient = useQueryClient();
+const DataTable = (props: PropsDataTable) => {
     const [selectedRows, setSelectedRows] = useState([]);
 
-    const mutation = useMutation({
-        mutationFn: (id: string) => {
-            return fetch(`${import.meta.env.VITE_BASE_URL}/${props.slug}/${id}`, { method: 'delete' });
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries([`all${props.slug}`]);
-        },
-    });
+    const mutation = mutationDelete(props);
 
-    const mutationDeleteSelected = useMutation({
-        mutationFn: (ids: string[]) => {
-            return fetch(`${import.meta.env.VITE_BASE_URL}/${props.slug}`, {
-                method: 'delete',
-                body: JSON.stringify({
-                    ids,
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries([`all${props.slug}`]);
-        },
-    });
+    const mutationDeleteSelected = mutationDeletes(props);
 
     const handleDelete = (id: string) => {
         mutation.mutate(id);
@@ -111,7 +79,7 @@ const DataTable = (props: Props) => {
                                 quickFilterProps: { debounceMs: 500 },
                             },
                         }}
-                        pageSizeOptions={[5, 10, 25]}
+                        pageSizeOptions={[10, 25, 50, 100]}
                         checkboxSelection
                         pagination
                         rowCount={props.total}
@@ -121,7 +89,13 @@ const DataTable = (props: Props) => {
                             props.setLimit(e.pageSize);
                             props.setPage(e.page);
                         }}
-                        onRowSelectionModelChange={(rowSelect: any) => setSelectedRows(rowSelect)}
+                        onRowSelectionModelChange={(rowSelect: any) => {
+                            if (rowSelect.length > 1) {
+                                setSelectedRows(rowSelect);
+                            } else {
+                                setSelectedRows([]);
+                            }
+                        }}
                     />
                 </Box>
             </div>

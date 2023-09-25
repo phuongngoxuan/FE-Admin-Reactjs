@@ -1,5 +1,4 @@
 import './new.scss';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import DriveFolderUploadOutlinedIcon from '@mui/icons-material/DriveFolderUploadOutlined';
 import { useState } from 'react';
 
@@ -9,39 +8,51 @@ interface Props {
 }
 
 const New = (props: Props) => {
-    const queryClient = useQueryClient();
     const [file, setFile] = useState<Blob | null>(null);
-
-    const mutation = useMutation({
-        mutationFn: () => {
-            console.log('in');
-            return fetch(`http://localhost:3343/api/v1/${props.slug}`, {
-                method: 'post',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json',
-                },
-                body: JSON.stringify({
-                    img: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=1600',
-                    lastName: 'Parsons',
-                    firstName: 'Leah',
-                    email: 'uzozor@gmail.com',
-                    phone: '123 456 789',
-                    createdAt: '01.02.2023',
-                    password: '123',
-                }),
-            });
-        },
-        onSuccess: () => {
-            // queryClient.invalidateQueries([`all${props.slug}`]);
-        },
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        phone: '',
+        img: '',
     });
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
 
     const handlerSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
+        console.log(formData);
         // mutation.mutate();
     };
+
+    // const mutation = useMutation({
+    //     mutationFn: () => {
+    //         console.log('in');
+    //         return fetch(`http://localhost:3343/api/v1/${props.slug}`, {
+    //             method: 'post',
+    //             headers: {
+    //                 Accept: 'application/json',
+    //                 'Content-type': 'application/json',
+    //             },
+    //             body: JSON.stringify({
+    //                 img: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    //                 lastName: 'Parsons',
+    //                 firstName: 'Leah',
+    //                 email: 'uzozor@gmail.com',
+    //                 phone: '123 456 789',
+    //                 createdAt: '01.02.2023',
+    //                 password: '123',
+    //             }),
+    //         });
+    //     },
+    //     onSuccess: () => {
+    //         // queryClient.invalidateQueries([`all${props.slug}`]);
+    //     },
+    // });
 
     return (
         <div className="new">
@@ -67,6 +78,7 @@ const New = (props: Props) => {
                                 </label>
                                 <input
                                     type="file"
+                                    name="img"
                                     id="file"
                                     onChange={(e: any) => {
                                         setFile(e?.target?.files?.[0]);
@@ -77,7 +89,12 @@ const New = (props: Props) => {
                             {props?.inputs?.map((input: any) => (
                                 <div className="formInput" key={input.id}>
                                     <label>{input.label}</label>
-                                    <input type={input.type} placeholder={input.placeholder} />
+                                    <input
+                                        type={input.type}
+                                        name={input.name}
+                                        placeholder={input.placeholder}
+                                        onChange={handleInputChange}
+                                    />
                                 </div>
                             ))}
                         </div>
