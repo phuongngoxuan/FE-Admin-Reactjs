@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import './styles/global.scss';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { userInputs } from './data';
+import NotFound from './pages/notFound/NotFound';
 
 const Home = lazy(() => import('./pages/home/Home'));
 const Users = lazy(() => import('./pages/users/Users'));
@@ -15,6 +16,7 @@ const Product = lazy(() => import('./pages/product/Product'));
 const User = lazy(() => import('./pages/user/User'));
 const New = lazy(() => import('./pages/new/New'));
 const Menu = lazy(() => import('./components/menu/Menu'));
+const Login = lazy(() => import('./pages/login/Login'));
 
 const queryClient = new QueryClient();
 
@@ -91,7 +93,11 @@ function App() {
         },
         {
             path: 'login',
-            element: <div> Login</div>,
+            element: <Login />,
+        },
+        {
+            path: '*',
+            element: <NotFound />,
         },
     ]);
 
