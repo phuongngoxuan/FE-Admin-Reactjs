@@ -33,7 +33,11 @@ const New = (props: Props) => {
 
         try {
             // step 1: Tải lên ảnh và nhận URL
+
+            console.log(formData.img);
+            const x = mutationUpload.mutate(formData.img);
             if (typeof formData.img === 'string' && !formData.img.startsWith('http')) {
+                console.log(formData.img);
                 const x = mutationUpload.mutate(formData.img);
                 console.log('x_____');
                 console.log(x);

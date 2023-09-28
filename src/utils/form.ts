@@ -7,10 +7,10 @@ interface FormData {
 export const handleFormInput = (e: FormEvent, formData: FormData, setFormData: any) => {
     const { name, value, type, files } = e.target;
     if (type === 'file') {
-        getBase64(files?.[0]).then((e) => {
-            const base64Image = e.split(',')[1];
-            setFormData({ ...formData, [name]: base64Image });
-        });
+        const dataUpload = new FormData();
+        dataUpload.append('image', files?.[0] as File);
+
+        setFormData({ ...formData, [name]: dataUpload });
     } else {
         setFormData({ ...formData, [name]: value });
     }

@@ -4,15 +4,15 @@ import { request } from './base.api';
 export const mutationUploadImage = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (fileBase64: string) => {
+        mutationFn: (image: any) => {
             return request({
                 url: `${import.meta.env.VITE_BASE_URL}/upload/image`,
                 method: 'post',
                 body: {
-                    file: fileBase64,
+                    ...image,
                 },
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': 'application/json, multipart/form-data',
                 },
             });
         },
