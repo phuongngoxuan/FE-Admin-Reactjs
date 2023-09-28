@@ -1,6 +1,9 @@
 import './new.scss';
 import DriveFolderUploadOutlinedIcon from '@mui/icons-material/DriveFolderUploadOutlined';
 import { useState } from 'react';
+import { handleFormInput } from '../../utils/form';
+import { mutationCreate } from '../../shares/api/new.api';
+import { mutationUploadImage } from '../../shares/api/upload.api';
 
 interface Props {
     title: string;
@@ -18,17 +21,46 @@ const New = (props: Props) => {
         img: '',
     });
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+    const handleInputChange = (e: any) => {
+        handleFormInput(e, formData, setFormData);
     };
 
-    const handlerSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const mutationDeleteSelected = mutationCreate({ slug: 'user', method: 'delete' });
+    const mutationUpload = mutationUploadImage();
+
+    const handlerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(formData);
-        // mutation.mutate();
-    };
 
+        try {
+            // step 1: Tải lên ảnh và nhận URL
+            if (typeof formData.img === 'string' && !formData.img.startsWith('http')) {
+                const x = mutationUpload.mutate(formData.img);
+                console.log('x_____');
+                console.log(x);
+            }
+            // step 2: Gửi yêu cầu POST đến API sử dụng mutation
+            // const formDataToSend = {
+            //     firstName: formData.firstName,
+            //     lastName: formData.lastName,
+            //     email: formData.email,
+            //     password: formData.password,
+            //     phone: formData.phone,
+            //     img: imageUrl,
+            // };
+            // const response = await axios.post('YOUR_API_URL', formDataToSend);
+            // console.log(response.data);
+            // setFormData({
+            //     firstName: '',
+            //     lastName: '',
+            //     email: '',
+            //     password: '',
+            //     phone: '',
+            //     img: '',
+            // });
+        } catch (error) {
+            console.error(error);
+        }
+    };
     // const mutation = useMutation({
     //     mutationFn: () => {
     //         console.log('in');
@@ -55,22 +87,22 @@ const New = (props: Props) => {
     // });
 
     return (
-        <div className="new">
-            <div className="top">
-                <h1> Add New User</h1>
-            </div>
-            <div className="bottom">
-                <div className="left">
-                    <img
-                        src={
-                            file
-                                ? URL.createObjectURL(file)
-                                : 'https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg'
-                        }
-                    />
+        <form onSubmit={handlerSubmit}>
+            <div className="new">
+                <div className="top">
+                    <h1> Add New User</h1>
                 </div>
-                <div className="right">
-                    <form onSubmit={handlerSubmit}>
+                <div className="bottom">
+                    <div className="left">
+                        <img
+                            src={
+                                file
+                                    ? URL.createObjectURL(file)
+                                    : 'https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg'
+                            }
+                        />
+                    </div>
+                    <div className="right">
                         <div className="item">
                             <div className="formInput">
                                 <label htmlFor="file">
@@ -82,6 +114,7 @@ const New = (props: Props) => {
                                     id="file"
                                     onChange={(e: any) => {
                                         setFile(e?.target?.files?.[0]);
+                                        handleInputChange(e);
                                     }}
                                     style={{ display: 'none' }}
                                 />
@@ -100,10 +133,10 @@ const New = (props: Props) => {
                         </div>
 
                         <button>Send</button>
-                    </form>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
     );
 };
 

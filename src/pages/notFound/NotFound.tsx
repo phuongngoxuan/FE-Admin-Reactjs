@@ -26,7 +26,7 @@ const NotFound = () => {
     }, []);
 
     return (
-        <a target="_blank" href="/home">
+        <div className="notFound">
             <div className="container">
                 <div className="row">
                     <div className="col-sm-12 col-md-12 mt-5 mb-5 wrapper">
@@ -1203,7 +1203,7 @@ const NotFound = () => {
                     </div>
                 </div>
             </div>
-        </a>
+        </div>
     );
 };
 
