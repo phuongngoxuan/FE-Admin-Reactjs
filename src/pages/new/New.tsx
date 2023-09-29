@@ -11,21 +11,25 @@ interface Props {
 }
 
 const New = (props: Props) => {
+    const [inputs, setInput] = useState(props?.inputs);
     const [file, setFile] = useState<Blob | null>(null);
-    const [formData, setFormData] = useState({
+
+    const initialFormData = {
         firstName: '',
         lastName: '',
         email: '',
         password: '',
         phone: '',
         img: '',
-    });
+    };
+
+    const [formData, setFormData] = useState<typeof initialFormData>(initialFormData);
 
     const handleInputChange = (e: any) => {
         handleFormInput(e, formData, setFormData);
     };
 
-    const mutationCreateNewItem = mutationCreate({ slug: 'user', method: 'post' });
+    const mutationCreateNewItem = mutationCreate({ slug: 'users', method: 'post' });
 
     const handlerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -49,18 +53,24 @@ const New = (props: Props) => {
 
                 mutationCreateNewItem.mutate(formDataToSend);
 
-                setFormData({
-                    firstName: '',
-                    lastName: '',
-                    email: '',
-                    password: '',
-                    phone: '',
-                    img: '',
-                });
+                resetForm();
             });
         } catch (error) {
             console.error(error);
         }
+    };
+
+    const resetForm = () => {
+        setFormData({
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            phone: '',
+            img: '',
+        });
+        setInput(props?.inputs);
+        setFile(null);
     };
 
     return (
@@ -96,7 +106,7 @@ const New = (props: Props) => {
                                     style={{ display: 'none' }}
                                 />
                             </div>
-                            {props?.inputs?.map((input: any) => (
+                            {inputs?.map((input: any) => (
                                 <div className="formInput" key={input.id}>
                                     <label>{input.label}</label>
                                     <input
@@ -104,6 +114,7 @@ const New = (props: Props) => {
                                         name={input.name}
                                         placeholder={input.placeholder}
                                         onChange={handleInputChange}
+                                        value={formData[input.name as keyof typeof formData]}
                                     />
                                 </div>
                             ))}
