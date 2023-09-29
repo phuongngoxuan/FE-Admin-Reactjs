@@ -7,10 +7,10 @@ interface FormData {
 export const handleFormInput = (e: FormEvent, formData: FormData, setFormData: any) => {
     const { name, value, type, files } = e.target;
     if (type === 'file') {
-        const dataUpload = new FormData();
-        dataUpload.append('image', files?.[0] as File);
+        const reader = new FileReader();
+        reader.readAsDataURL(files?.[0] as any);
 
-        setFormData({ ...formData, [name]: dataUpload });
+        setFormData({ ...formData, [name]: files?.[0] });
     } else {
         setFormData({ ...formData, [name]: value });
     }

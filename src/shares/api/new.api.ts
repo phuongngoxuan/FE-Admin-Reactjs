@@ -13,9 +13,7 @@ export const mutationCreate = (props: PropsCreateNew) => {
             return request({
                 url: `${import.meta.env.VITE_BASE_URL}/${props.slug}`,
                 method: props.method,
-                body: {
-                    ...body,
-                },
+                body,
             });
         },
         onSuccess: () => {

@@ -1,26 +1,14 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { request } from './base.api';
+// import { useMutation, useQueryClient } from '@tanstack/react-query';
+// import { request } from './base.api';
+import axios from 'axios';
 
-export const mutationUploadImage = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (image: any) => {
-            return request({
-                url: `${import.meta.env.VITE_BASE_URL}/upload/image`,
-                method: 'post',
-                body: {
-                    ...image,
-                },
-                headers: {
-                    'Content-Type': 'application/json, multipart/form-data',
-                },
-            });
-        },
-        onSuccess: (e) => {
-            console.log(e);
-        },
-        onError: (e) => {
-            console.log(e);
-        },
+export const uploadImage = (formData: any) => {
+    axios({
+        url: `${import.meta.env.VITE_BASE_URL}/upload/image`,
+        data: formData,
+        method: 'post',
+    }).then((e) => {
+        console.log(e);
+        return e;
     });
 };

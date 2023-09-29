@@ -3,7 +3,7 @@ import DriveFolderUploadOutlinedIcon from '@mui/icons-material/DriveFolderUpload
 import { useState } from 'react';
 import { handleFormInput } from '../../utils/form';
 import { mutationCreate } from '../../shares/api/new.api';
-import { mutationUploadImage } from '../../shares/api/upload.api';
+import { uploadImage } from '../../shares/api/upload.api';
 
 interface Props {
     title: string;
@@ -25,23 +25,17 @@ const New = (props: Props) => {
         handleFormInput(e, formData, setFormData);
     };
 
-    const mutationDeleteSelected = mutationCreate({ slug: 'user', method: 'delete' });
-    const mutationUpload = mutationUploadImage();
+    const mutationCreateNewItem = mutationCreate({ slug: 'user', method: 'delete' });
 
     const handlerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
             // step 1: Tải lên ảnh và nhận URL
+            const data = new FormData();
+            data.append('image', formData.img);
+            uploadImage(data);
 
-            console.log(formData.img);
-            const x = mutationUpload.mutate(formData.img);
-            if (typeof formData.img === 'string' && !formData.img.startsWith('http')) {
-                console.log(formData.img);
-                const x = mutationUpload.mutate(formData.img);
-                console.log('x_____');
-                console.log(x);
-            }
             // step 2: Gửi yêu cầu POST đến API sử dụng mutation
             // const formDataToSend = {
             //     firstName: formData.firstName,
