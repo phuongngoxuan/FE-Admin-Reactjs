@@ -25,64 +25,43 @@ const New = (props: Props) => {
         handleFormInput(e, formData, setFormData);
     };
 
-    const mutationCreateNewItem = mutationCreate({ slug: 'user', method: 'delete' });
+    const mutationCreateNewItem = mutationCreate({ slug: 'user', method: 'post' });
 
     const handlerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
-            // step 1: Tải lên ảnh và nhận URL
             const data = new FormData();
             data.append('image', formData.img);
-            uploadImage(data);
 
-            // step 2: Gửi yêu cầu POST đến API sử dụng mutation
-            // const formDataToSend = {
-            //     firstName: formData.firstName,
-            //     lastName: formData.lastName,
-            //     email: formData.email,
-            //     password: formData.password,
-            //     phone: formData.phone,
-            //     img: imageUrl,
-            // };
-            // const response = await axios.post('YOUR_API_URL', formDataToSend);
-            // console.log(response.data);
-            // setFormData({
-            //     firstName: '',
-            //     lastName: '',
-            //     email: '',
-            //     password: '',
-            //     phone: '',
-            //     img: '',
-            // });
+            uploadImage(data).then(async (e) => {
+                const { url } = e;
+                const { firstName, lastName, email, password, phone } = formData;
+
+                const formDataToSend = {
+                    firstName,
+                    lastName,
+                    email,
+                    password,
+                    phone,
+                    img: url,
+                };
+
+                mutationCreateNewItem.mutate(formDataToSend);
+
+                setFormData({
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    password: '',
+                    phone: '',
+                    img: '',
+                });
+            });
         } catch (error) {
             console.error(error);
         }
     };
-    // const mutation = useMutation({
-    //     mutationFn: () => {
-    //         console.log('in');
-    //         return fetch(`http://localhost:3343/api/v1/${props.slug}`, {
-    //             method: 'post',
-    //             headers: {
-    //                 Accept: 'application/json',
-    //                 'Content-type': 'application/json',
-    //             },
-    //             body: JSON.stringify({
-    //                 img: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=1600',
-    //                 lastName: 'Parsons',
-    //                 firstName: 'Leah',
-    //                 email: 'uzozor@gmail.com',
-    //                 phone: '123 456 789',
-    //                 createdAt: '01.02.2023',
-    //                 password: '123',
-    //             }),
-    //         });
-    //     },
-    //     onSuccess: () => {
-    //         // queryClient.invalidateQueries([`all${props.slug}`]);
-    //     },
-    // });
 
     return (
         <form onSubmit={handlerSubmit}>

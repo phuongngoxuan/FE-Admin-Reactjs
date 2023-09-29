@@ -7,7 +7,6 @@ export interface PropsCreateNew {
 }
 
 export const mutationCreate = (props: PropsCreateNew) => {
-    const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (body: object) => {
             return request({
@@ -15,9 +14,6 @@ export const mutationCreate = (props: PropsCreateNew) => {
                 method: props.method,
                 body,
             });
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries([`all${props.slug}`]);
         },
     });
 };
