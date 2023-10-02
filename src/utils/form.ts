@@ -4,7 +4,7 @@ interface FormData {
     [key: string]: string;
 }
 
-export const handleFormInput = (e: FormEvent, formData: FormData, setFormData: any) => {
+export const getDataForm = (e: FormEvent, formData: FormData, setFormData: any) => {
     const { name, value, type, files } = e.target;
     if (type === 'file') {
         const reader = new FileReader();

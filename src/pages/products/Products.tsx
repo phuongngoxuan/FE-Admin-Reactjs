@@ -3,7 +3,9 @@ import Add from '../../components/add/Add';
 import DataTable from '../../components/dataTable/DataTable';
 import './products.scss';
 import { GridColDef } from '@mui/x-data-grid';
-import { useQuery } from '@tanstack/react-query';
+import { convertRow } from '../../utils/convert';
+import { mutationGets } from '../../shares/api/base.api';
+import Loading from '../../components/loadding/Loading';
 
 const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 90 },
@@ -54,25 +56,15 @@ const columns: GridColDef[] = [
 ];
 
 const Products = () => {
+    const slug = 'products';
     const [open, setOpen] = useState(false);
     const [page, setPage] = useState(0);
     const [limit, setLimit] = useState(10);
     const [total, setTotal] = useState(0);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { isLoading, data } = useQuery(['allproducts'], () =>
-        fetch(`${import.meta.env.VITE_BASE_URL}/products?page=${page + 1}&limit=${limit}`)
-            .then((res) => res.json())
-            .then((data) => {
-                setTotal(data?.data?.total);
-                return data;
-            }),
-    );
+    const { isLoading, data } = mutationGets({ slug, page, limit, setTotal });
 
-    const rowData =
-        data?.data?.result?.map((item: any) => {
-            return { ...item, id: item?._id };
-        }) || [];
+    const rowData = convertRow(data);
 
     return (
         <div className="products">
@@ -81,7 +73,7 @@ const Products = () => {
                 <button onClick={() => setOpen(true)}>Add New Product</button>
             </div>
             {isLoading ? (
-                'Loading...'
+                <Loading />
             ) : (
                 <DataTable
                     slug="products"

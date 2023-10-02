@@ -1,16 +1,16 @@
-import './new.scss';
+import './newUser.scss';
 import DriveFolderUploadOutlinedIcon from '@mui/icons-material/DriveFolderUploadOutlined';
 import { useState } from 'react';
-import { handleFormInput } from '../../utils/form';
-import { mutationCreate } from '../../shares/api/new.api';
+import { getDataForm } from '../../utils/form';
 import { uploadImage } from '../../shares/api/upload.api';
+import { mutationPost } from '../../shares/api/base.api';
 
 interface Props {
     title: string;
     inputs: object[];
 }
 
-const New = (props: Props) => {
+const NewUser = (props: Props) => {
     const [inputs, setInput] = useState(props?.inputs);
     const [file, setFile] = useState<Blob | null>(null);
 
@@ -26,49 +26,44 @@ const New = (props: Props) => {
     const [formData, setFormData] = useState<typeof initialFormData>(initialFormData);
 
     const handleInputChange = (e: any) => {
-        handleFormInput(e, formData, setFormData);
+        getDataForm(e, formData, setFormData);
     };
 
-    const mutationCreateNewItem = mutationCreate({ slug: 'users', method: 'post' });
+    const mutationCreateNewItem = mutationPost({ slug: 'users' });
 
     const handlerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
-            const data = new FormData();
-            data.append('image', formData.img);
+            const { firstName, lastName, email, password, phone } = formData;
+            let url = '';
 
-            uploadImage(data).then(async (e) => {
-                const { url } = e;
-                const { firstName, lastName, email, password, phone } = formData;
+            if (formData.img) {
+                const data = new FormData();
+                data.append('image', formData.img);
+                const res = await uploadImage(data);
+                url = res?.url;
+            }
 
-                const formDataToSend = {
-                    firstName,
-                    lastName,
-                    email,
-                    password,
-                    phone,
-                    img: url,
-                };
+            const formDataToSend = {
+                firstName,
+                lastName,
+                email,
+                password,
+                phone,
+                img: url,
+            };
 
-                mutationCreateNewItem.mutate(formDataToSend);
+            mutationCreateNewItem.mutate(formDataToSend);
 
-                resetForm();
-            });
+            resetForm();
         } catch (error) {
             console.error(error);
         }
     };
 
     const resetForm = () => {
-        setFormData({
-            firstName: '',
-            lastName: '',
-            email: '',
-            password: '',
-            phone: '',
-            img: '',
-        });
+        setFormData(initialFormData);
         setInput(props?.inputs);
         setFile(null);
     };
@@ -139,6 +134,6 @@ export const getFormattedFormData = (form: HTMLFormElement) => {
     return data;
 };
 
-New.propTypes = {};
+NewUser.propTypes = {};
 
-export default New;
+export default NewUser;

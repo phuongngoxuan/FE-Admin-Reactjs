@@ -4,6 +4,10 @@ import './styles/global.scss';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { userInputs } from './data';
 import NotFound from './pages/notFound/NotFound';
+import { Provider } from 'react-redux';
+import store from './redux/store';
+import AuthChecker from './components/auth/AuthChecker';
+import Loading from './components/loadding/Loading';
 
 const Home = lazy(() => import('./pages/home/Home'));
 const Users = lazy(() => import('./pages/users/Users'));
@@ -14,7 +18,7 @@ const Navbar = lazy(() => import('./components/navbar/Navbar'));
 const Footer = lazy(() => import('./components/footer/Footer'));
 const Product = lazy(() => import('./pages/product/Product'));
 const User = lazy(() => import('./pages/user/User'));
-const New = lazy(() => import('./pages/new/New'));
+const NewUser = lazy(() => import('./pages/newUser/NewUser'));
 const Menu = lazy(() => import('./components/menu/Menu'));
 const Login = lazy(() => import('./pages/login/Login'));
 
@@ -39,7 +43,20 @@ const Layout = () => {
     );
 };
 
-function App() {
+const App = () => {
+    const user = JSON.parse(localStorage.getItem('user') as any);
+
+    const auth = createBrowserRouter([
+        {
+            path: '*',
+            element: <AuthChecker />,
+        },
+        {
+            path: 'login',
+            element: <Login />,
+        },
+    ]);
+
     const router = createBrowserRouter([
         {
             path: '/',
@@ -87,13 +104,13 @@ function App() {
                 },
                 {
                     path: `users/new`,
-                    element: <New inputs={userInputs} title="user" />,
+                    element: <NewUser inputs={userInputs} title="user" />,
                 },
             ],
         },
         {
             path: 'login',
-            element: <Login />,
+            element: user?.accessToken ? <AuthChecker /> : <Login />,
         },
         {
             path: '*',
@@ -102,10 +119,14 @@ function App() {
     ]);
 
     return (
-        <React.Suspense fallback={<div>Loading...</div>}>
-            <RouterProvider router={router} />
-        </React.Suspense>
+        <>
+            <React.Suspense fallback={<Loading />}>
+                <Provider store={store}>
+                    <RouterProvider router={user?.accessToken ? router : auth} />
+                </Provider>
+            </React.Suspense>
+        </>
     );
-}
+};
 
 export default App;

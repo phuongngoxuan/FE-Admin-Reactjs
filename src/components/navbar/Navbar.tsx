@@ -1,11 +1,15 @@
+import { Link } from 'react-router-dom';
 import './navbar.scss';
+import Setting from '../setting/Setting';
 
 const Navbar = () => {
     return (
         <div className="navbar">
             <div className="logo">
-                <img src="../logo.svg" alt="" />
-                <span>Admin Demo App</span>
+                <Link to="/">
+                    <img src="../logo.svg" alt="" />
+                    <span>Admin Demo App</span>
+                </Link>
             </div>
             <div className="icon">
                 <img src="/search.svg" alt="icon" />
@@ -22,7 +26,7 @@ const Navbar = () => {
                     />
                     <span>Nate</span>
                 </div>
-                <img src="/setting.svg" alt="icon" />
+                <Setting />
             </div>
         </div>
     );

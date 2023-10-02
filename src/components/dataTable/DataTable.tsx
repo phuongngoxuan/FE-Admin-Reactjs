@@ -6,10 +6,6 @@ import {
     GridToolbarContainer,
     GridToolbarExport,
     GridToolbarQuickFilter,
-    // GridToolbar,
-    // GridToolbarColumnsButton,
-    // GridToolbarFilterButton,
-    // GridToolbarDensitySelector,
 } from '@mui/x-data-grid';
 
 import { Link } from 'react-router-dom';
@@ -17,7 +13,7 @@ import { useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import { PropsDataTable } from '../../shares/interface/dataTable.interface';
-import { mutationDelete, mutationDeletes } from '../../shares/api/dataTable.api';
+import { mutationDelete, mutationDeletes } from '../../shares/api/base.api';
 
 const DataTable = (props: PropsDataTable) => {
     const [selectedRows, setSelectedRows] = useState([]);
@@ -79,7 +75,7 @@ const DataTable = (props: PropsDataTable) => {
                                 quickFilterProps: { debounceMs: 500 },
                             },
                         }}
-                        pageSizeOptions={[10, 25, 50, 100]}
+                        pageSizeOptions={[5, 10, 25, 50, 100]}
                         checkboxSelection
                         pagination
                         rowCount={props.total}
@@ -112,8 +108,6 @@ const DataTable = (props: PropsDataTable) => {
                         </IconButton>
                     ) : null}
                 </div>
-                {/* <GridToolbarFilterButton />
-                <GridToolbarDensitySelector /> */}
                 <div className="right">
                     <GridToolbarQuickFilter className="quickFilter" />
                     <GridToolbarExport />

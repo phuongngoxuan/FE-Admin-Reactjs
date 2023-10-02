@@ -1,5 +1,3 @@
-// import { useMutation, useQueryClient } from '@tanstack/react-query';
-// import { request } from './base.api';
 import axios from 'axios';
 
 export const uploadImage = (formData: any) => {

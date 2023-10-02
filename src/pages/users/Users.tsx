@@ -2,8 +2,10 @@ import { GridColDef } from '@mui/x-data-grid';
 import { ReactElement, useState } from 'react';
 import DataTable from '../../components/dataTable/DataTable';
 import './users.scss';
-import Add from '../../components/add/Add';
-import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
+import { convertRow } from '../../utils/convert';
+import { mutationGets } from '../../shares/api/base.api';
+import Loading from '../../components/loadding/Loading';
 
 const columns: GridColDef[] = [
     { field: '_id', headerName: 'ID', width: 90 },
@@ -12,7 +14,11 @@ const columns: GridColDef[] = [
         headerName: 'Avatar',
         width: 100,
         renderCell: (params) => {
-            return <img src={params.row.img || '/noavatar.png'} alt="" />;
+            if (params.row.img.includes('http')) {
+                return <img src={params.row.img || '/noavatar.png'} alt="" />;
+            } else {
+                return <img src={`${import.meta.env.VITE_BASE_URL}/` + params.row.img || '/noavatar.png'} alt="" />;
+            }
         },
     },
     {
@@ -54,36 +60,26 @@ const columns: GridColDef[] = [
 ];
 
 function Users(): ReactElement<any, any> {
-    const [open, setOpen] = useState(false);
+    const slug = 'users';
     const [page, setPage] = useState(0);
     const [limit, setLimit] = useState(10);
     const [total, setTotal] = useState(0);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { isLoading, data } = useQuery(['allusers', page, limit], () =>
-        fetch(`${import.meta.env.VITE_BASE_URL}/users?page=${page + 1}&limit=${limit}`)
-            .then((res) => res.json())
-            .then((data) => {
-                setTotal(data?.data?.total);
-                return data;
-            }),
-    );
+    const { isLoading, data } = mutationGets({ slug, page, limit, setTotal });
 
-    // add field id in table
-    const rowData =
-        data?.data?.result?.map((item: any) => {
-            return { ...item, id: item?._id };
-        }) || [];
+    const rowData = convertRow(data);
 
     return (
         <div className="users">
             <div className="info">
                 <h1>Users</h1>
-                <button onClick={() => setOpen(true)}>Add New User</button>
+                <Link to="new">
+                    <button>Add New User</button>
+                </Link>
             </div>
 
             {isLoading ? (
-                'Loading...'
+                <Loading />
             ) : (
                 <DataTable
                     slug="users"
@@ -96,8 +92,6 @@ function Users(): ReactElement<any, any> {
                     total={total}
                 />
             )}
-
-            <div>{open && <Add slug="users" columns={columns} setOpen={setOpen} />}</div>
         </div>
     );
 }
