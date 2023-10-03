@@ -2,6 +2,8 @@ import { Payload } from '../interface/base.interface';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { ERROR } from '../message/error';
+import { callApiStart, callApiSuccess } from '../../redux/userSlice';
+import { AnyAction, Dispatch } from 'redux';
 
 export const request = (payload: Payload) => {
     const { url, body, method, headers } = payload;
@@ -130,23 +132,28 @@ export const mutationPatch = (props: propsPatch) => {
 interface ParamLogin {
     slug: string;
     body: any;
-    setIsFetching: React.Dispatch<React.SetStateAction<boolean>>;
+    dispatch: Dispatch<AnyAction>;
 }
 
-export const axiosLogin = async ({ slug, body, setIsFetching }: ParamLogin) => {
-    setIsFetching(true);
+export const axiosLogin = async ({ slug, body, dispatch }: ParamLogin) => {
+    dispatch(callApiStart());
     return axios({
         url: `${import.meta.env.VITE_BASE_URL}/${slug}`,
         data: body,
         method: 'post',
     })
         .then((e) => {
-            return e?.data?.data;
+            const authInfo = e?.data?.data;
+            localStorage.setItem(
+                'user',
+                JSON.stringify({ accessToken: authInfo?.accessToken, refreshToken: authInfo?.refreshToken }),
+            );
+            dispatch(callApiSuccess(authInfo));
         })
         .catch(() => {
             alert(ERROR.AUTH_INVALID_PASS_OR_EMAIL);
         })
-        .finally(() => setIsFetching(false));
+        .finally(() => {});
 };
 
 // export const mutationLogin = (props: ParamLogin) => {
