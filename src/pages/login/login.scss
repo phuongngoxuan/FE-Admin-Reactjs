@@ -133,12 +133,22 @@ body {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3E1D6D', endColorstr='#092756',GradientType=1 );
 }
 .login {
+    display: flex;
+    flex-direction: column;
     position: absolute;
     top: 50%;
     left: 50%;
     margin: -150px 0 0 -150px;
     width: 300px;
     height: 300px;
+
+    .error {
+        width: 100%;
+        text-align: center;
+        color: red;
+        font-size: 14px;
+        margin: auto;
+    }
 }
 .login h1 {
     color: #fff;

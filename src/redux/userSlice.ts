@@ -36,6 +36,7 @@ export const userSlice = createSlice({
             state.pending = false;
         },
         callApiError: (state) => {
+            console.log('error');
             state.error = true;
             state.pending = false;
         },

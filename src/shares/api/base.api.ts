@@ -2,7 +2,7 @@ import { Payload } from '../interface/base.interface';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { ERROR } from '../message/error';
-import { callApiStart, callApiSuccess } from '../../redux/userSlice';
+import { callApiError, callApiStart, callApiSuccess } from '../../redux/userSlice';
 import { AnyAction, Dispatch } from 'redux';
 
 export const request = (payload: Payload) => {
@@ -149,9 +149,11 @@ export const axiosLogin = async ({ slug, body, dispatch }: ParamLogin) => {
                 JSON.stringify({ accessToken: authInfo?.accessToken, refreshToken: authInfo?.refreshToken }),
             );
             dispatch(callApiSuccess(authInfo));
+            window.location.reload();
         })
         .catch(() => {
-            alert(ERROR.AUTH_INVALID_PASS_OR_EMAIL);
+            dispatch(callApiError());
+            return;
         })
         .finally(() => {});
 };

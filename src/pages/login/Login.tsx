@@ -20,10 +20,9 @@ const Login = () => {
     const handlerSubmit = (e: any) => {
         e.preventDefault();
 
-        axiosLogin({ slug, body: dataForm, dispatch }).then(() => {
-            window.location.reload();
-        });
+        axiosLogin({ slug, body: dataForm, dispatch });
     };
+    console.log(user.error);
 
     return (
         <div className="login">
@@ -37,9 +36,11 @@ const Login = () => {
                     required={true}
                     onChange={handlerChange}
                 />
-                <button type="submit" disabled={user.pending} className="btn btn-primary btn-block btn-large">
+
+                <button type="submit" disabled={user?.pending} className="btn btn-primary btn-block btn-large">
                     Login
                 </button>
+                {user?.error && <span className="error"> Some thing went wrong</span>}
             </form>
         </div>
     );
