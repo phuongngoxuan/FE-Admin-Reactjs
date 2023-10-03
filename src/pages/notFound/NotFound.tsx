@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import './notFound.scss';
 import anime from 'animejs';
 

@@ -1,7 +1,6 @@
 import { Payload } from '../interface/base.interface';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import { ERROR } from '../message/error';
 import { callApiError, callApiStart, callApiSuccess } from '../../redux/userSlice';
 import { AnyAction, Dispatch } from 'redux';
 
